@@ -20,13 +20,13 @@
 ## Run PHPUnit Tests with Coverage Step:
 
 - `./vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite UnitTests --coverage-clover coverage.xml`:
-> - Explicitly runs PHPUnit via `vendor/bin/phpunit`.
-> - `--configuration phpunit.xml.dist`: Specifies the PHPUnit configuration file, which is good practice.
-> - `--testsuite UnitTests`: If your `phpunit.xml` has defined test suites (e.g., Unit, Integration), this allows running them separately or ensuring specific tests are run.
-> - `--coverage-clover coverage.xml`: Generates a Clover XML format coverage report, which is standard for integration with various tools (e.g., SonarQube, Code Climate, Bitbucket's own reporting features).
-> - `./vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite IntegrationTests --coverage-text --colors=always`: Running integration tests separately (if applicable) and outputting text coverage for immediate human readability in the logs.
-> - `artifacts: - coverage.xml`: Makes the generated coverage report available as a pipeline artifact, which can be downloaded or used by reporting tools.
-> - `after_script`: An example for integrating with a coverage reporting service (like GitLab's built-in coverage reporting, which can be adapted). This would typically involve parsing `coverage.xml` and sending it to a service.
+  - Explicitly runs PHPUnit via `vendor/bin/phpunit`.
+  - `--configuration phpunit.xml.dist`: Specifies the PHPUnit configuration file, which is good practice.
+  - `--testsuite UnitTests`: If your `phpunit.xml` has defined test suites (e.g., Unit, Integration), this allows running them separately or ensuring specific tests are run.
+  - `--coverage-clover coverage.xml`: Generates a Clover XML format coverage report, which is standard for integration with various tools (e.g., SonarQube, Code Climate, Bitbucket's own reporting features).
+  - `./vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite IntegrationTests --coverage-text --colors=always`: Running integration tests separately (if applicable) and outputting text coverage for immediate human readability in the logs.
+  - `artifacts: - coverage.xml`: Makes the generated coverage report available as a pipeline artifact, which can be downloaded or used by reporting tools.
+  - `after_script`: An example for integrating with a coverage reporting service (like GitLab's built-in coverage reporting, which can be adapted). This would typically involve parsing `coverage.xml` and sending it to a service.
 
 ## Static Code Analysis Step:
 
@@ -55,11 +55,11 @@
 - `Efficiency`: Caching Composer and Node.js dependencies significantly reduces build times. Using Alpine images further speeds up image pulls.
 - `Robustness`: Added Composer validation, static code analysis (PHPStan, PHP_CodeSniffer) to catch issues earlier.
 - `Test Performance & Coverage Insights`:
-> - Explicitly running PHPUnit and enabling coverage generation (--coverage-clover).
-> - Storing coverage.xml as an artifact allows for integration with various reporting tools for detailed insights.
-> - Running separate test suites (Unit, Integration) can improve test organization and performance by allowing selective execution.
+  - Explicitly running PHPUnit and enabling coverage generation (--coverage-clover).
+  - Storing coverage.xml as an artifact allows for integration with various reporting tools for detailed insights.
+  - Running separate test suites (Unit, Integration) can improve test organization and performance by allowing selective execution.
 - Deployment Readiness:
-> - `Dockerization`: The most significant enhancement. Building and pushing a Docker image makes your application portable and easily deployable to container orchestration platforms.
-> - `Asset Building`: If frontend assets are part of the application, building them within the pipeline ensures they are bundled correctly in the deployable artifact (e.g., Docker image).
+  - `Dockerization`: The most significant enhancement. Building and pushing a Docker image makes your application portable and easily deployable to container orchestration platforms.
+  - `Asset Building`: If frontend assets are part of the application, building them within the pipeline ensures they are bundled correctly in the deployable artifact (e.g., Docker image).
 ---
 **This enhanced pipeline provides a much more comprehensive, efficient, and robust CI/CD process for a Symfony PHP application, preparing it effectively for production deployments.**
