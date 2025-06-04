@@ -3,8 +3,8 @@
 - **Problem** : Users report that the Symfony API deployed in Kubernetes is returning 500 Internal Server Error. <br/>
 - **Stack** : PHP-FPM (Symfony), Kubernetes (GKE), Ingress + Service, Helm deployment, Grafana + Loki + Prometheus monitoring.
 ---
-- Step-by-Step Plan to Diagnose and Localize the Issue
-> The approach follows a "top-down" or "outside-in" methodology, starting from what the user sees and moving deeper into the stack.<br/>
+### Step-by-Step Plan to Diagnose and Localize the Issue
+- The approach follows a "top-down" or "outside-in" methodology, starting from what the user sees and moving deeper into the stack.<br/>
 
 **Phase 1: Initial Triage & System Health Check (5-10 minutes)**
 1. Verify Scope & Impact:
