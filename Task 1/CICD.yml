@@ -1,0 +1,51 @@
+image: php:8.1-fpm-alpine # Using a smaller, faster image with FPM (common for Symfony)
+pipelines:
+  default:
+    - step:
+        name: Install Dependencies & Cache
+        caches:
+          - composer
+        script:
+          - apk add --no-cache git # Ensure git is available for Composer
+          - composer install --no-interaction --prefer-dist --optimize-autoloader
+          - composer validate --strict # Validate composer.json
+        artifacts:
+          - vendor/** # Cache vendor directory for subsequent steps
+
+    - step:
+        name: Run PHPUnit Tests with Coverage
+        script:
+          - ./vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite UnitTests --coverage-clover coverage.xml
+          - ./vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite IntegrationTests --coverage-text --colors=always
+        artifacts:
+          - coverage.xml # Store coverage report as an artifact
+        after_script:
+          - if [ -f "coverage.xml" ]; then php -r "echo file_get_contents('https://gitlab.com/gitlab-org/gitlab-ci-yml/-/raw/master/src/templates/PHPUnit-coverage-report.php') | php -- -f coverage.xml -o coverage_report.json > /dev/null 2>&1"; fi # Example: publish to Code Climate/GitLab (requires additional setup)
+
+    - step:
+        name: Static Code Analysis (PHPStan & PHP_CodeSniffer)
+        script:
+          - ./vendor/bin/phpstan analyse src --level=5 # Adjust level as needed
+          - ./vendor/bin/phpcs --standard=PSR12 src # Or your preferred standard
+
+    - step:
+        name: Build Assets (Example for Frontend)
+        image: node:18-alpine # Use a Node.js image for frontend builds if applicable
+        caches:
+          - node
+        script:
+          - npm install # or yarn install
+          - npm run build # or yarn build
+        artifacts:
+          - public/build/** # Store built assets
+
+    - step:
+        name: Dockerize Application (Deployment Readiness)
+        services:
+          - docker
+        script:
+          - docker build -t my-symfony-app:${BITBUCKET_BUILD_NUMBER} .
+          - docker tag my-symfony-app:${BITBUCKET_BUILD_NUMBER} my-symfony-app:latest
+          - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD # Requires Bitbucket repo variables
+          - docker push my-symfony-app:${BITBUCKET_BUILD_NUMBER}
+          - docker push my-symfony-app:latest
